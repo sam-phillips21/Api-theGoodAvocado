@@ -1,5 +1,5 @@
 {
-  "name": "thegoodavocadoapi",
+  "name": "the-good-avocado-api",
   "version": "1.0.0",
   "description": "Api for mongoose express using token auth",
   "main": "server.js",
