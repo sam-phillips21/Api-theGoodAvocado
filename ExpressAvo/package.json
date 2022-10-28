@@ -1,13 +1,13 @@
 {
-  "name": "TheGoodAvocadoApi",
+  "name": "thegoodavocadoapi",
   "version": "1.0.0",
-  "description": "Auth boilerplate for mongoose express using token auth",
+  "description": "Api for mongoose express using token auth",
   "main": "server.js",
   "scripts": {
     "start": "nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Timm Schoenborn",
+  "author": "avocados",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.0.1",
