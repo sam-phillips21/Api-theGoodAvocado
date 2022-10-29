@@ -12,11 +12,6 @@ const userSchema = new mongoose.Schema(
 			required: true,
 		},
 		token: String,
-
-		restaurantOwner: {
-			type: Boolean,
-			required: true,
-		}
 	},
 	{
 		timestamps: true,
