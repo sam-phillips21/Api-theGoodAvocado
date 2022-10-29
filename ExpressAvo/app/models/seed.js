@@ -3,7 +3,7 @@ const Restaurant = require('./restaurant')
 const db = require('../../config/db')
 // update seed as : name, type, address, telephone, delivery, isUserRestaurantOwner, reviews
 
-const startAvos = [
+const startRestaurants = [
     { name: 'The Capital Grille', type: 'American', address:'1450 Larimer St, Denver, CO 80202', telephone:'303-539-2500', delivery: false, isUserRestuarantOwner: false},
     { name: 'Tacos Tequila Whiskey', type: 'Mexican', address:'1514 York St, Denver, CO 80206-1425', telephone:'720-475-1337', delivery: false, isUserRestuarantOwner: false},
     { name: 'True Food Kitchen', type: 'American', address:'2800 E 2nd Ave Unit 101, Denver, CO 80206-4914', telephone: '720-509-7661', delivery: false, isUserRestuarantOwner: false},
@@ -32,13 +32,13 @@ mongoose.connect(db, {
     useNewUrlParser: true
 })
     .then(() => { 
-        Avo.deleteMany({ owner: null })
-        .then(deletedAvos => {
+        Restaurant.deleteMany({ owner: null })
+        .then(deletedRestaurants => {
            
           
-            Avo.create(startAvos)
-                .then(newAvo => {
-                    console.log('the new avos', newAvos)
+            Restaurant.create(startRestaurants)
+                .then(newRestaurants => {
+                    console.log('the new', newRestaurants)
                     mongoose.connection.close()
                 })
                 .catch(error => {
