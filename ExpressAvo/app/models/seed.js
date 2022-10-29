@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const Avo = require('./Avo')
+const Restaurant = require('./restaurant')
 const db = require('../../config/db')
 // update seed as : name, type, address, telephone, delivery, isUserRestaurantOwner, reviews
 
