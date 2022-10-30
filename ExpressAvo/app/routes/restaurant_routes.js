@@ -55,7 +55,7 @@ router.get('/restaurants/:id', (req, res, next) => {
 
 //* CREATE
 //* /restaruants
-router.post('/restaruants', requireToken, (req, res, next) => {
+router.post('/restaurants', requireToken, (req, res, next) => {
     req.body.restaurant.owner = req.user.id
     req.body.delivery = req.body.delivery === 'on' ? true : false
     req.body.isUserRestaurantOwner = req.body.isUserRestaurantOwner === 'on' ? true : false
