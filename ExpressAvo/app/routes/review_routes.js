@@ -1,126 +1,100 @@
-// Express docs: http://expressjs.com/en/api.html
 const express = require('express')
-// Passport docs: http://www.passportjs.org/docs/
 const passport = require('passport')
 
-// pull in Mongoose model for reviews
-const Review = require('../models/review')
+// pull in Mongoose model for restaurants
+const Restaurant = require('../models/restaurant')
 
-// this is a collection of methods that help us detect situations when we need
-// to throw a custom error
 const customErrors = require('../../lib/custom_errors')
-
-// we'll use this function to send 404 when non-existant document is requested
 const handle404 = customErrors.handle404
-// we'll use this function to send 401 when a user tries to modify a resource
-// that's owned by someone else
 const requireOwnership = customErrors.requireOwnership
-
-// this is middleware that will remove blank fields from `req.body`, e.g.
-// { review: { title: '', text: 'foo' } } -> { review: { text: 'foo' } }
 const removeBlanks = require('../../lib/remove_blank_fields')
-// passing this as a second argument to `router.<verb>` will make it
-// so that a token MUST be passed for that route to be available
-// it will also set `req.user`
+const restaurant = require('../models/restaurant')
 const requireToken = passport.authenticate('bearer', { session: false })
-
-// instantiate a router (mini app that only handles routes)
 const router = express.Router()
 
-//* INDEX
-//* /reviews
-router.get('/reviews', (req, res, next) => {
-    Review.find()
-        .populate('owner')
-        .then(reviews => {
-            return reviews.map(review => review)
-        })
-        .then(reviews => {
-            res.status(200).json({ reviews: reviews })
-        })
-        .catch(next)
-})
 
-//* SHOW
-//* /reviews/:id
-router.get('/reviews/:id', (req, res, next) => {
-    Review.findById(req.params.id)
-        .populate('owner')
+// GET -> a restaurants review 
+// GET /reviews/<restaurant_id>
+router.get('/reviews/:restaurantId', removeBlanks, (req, res, next) => {
+    // get the review from req.body
+    const review = req.body.review
+    const restaurantId = req.params.restaurantId
+    // find the restaurant by its id
+    Restaurant.findById(restaurantId)
         .then(handle404)
-        .then(review => {
-            res.status(200).json({ review: review})
-        })
+        .then(restaurant => res.status(201).json({ restaurant: restaurant }))
+        // pass to the next thing
         .catch(next)
 })
 
-//* CREATE
-//* /reviews
-router.post('/reviews', requireToken, (req, res, next) => {
-    req.body.review.owner = req.user.id
+// POST -> anybody can give a restaurant a review
+// POST /reviews/<restaurant_id>
+router.post('/reviews/:restaurantId', removeBlanks, (req, res, next) => {
+    // get the review from req.body
+    const review = req.body.review
+    const restaurantId = req.params.restaurantId
+    // find the restaurant by its id
+    Restaurant.findById(restaurantId)
+        .then(handle404)
+        // add the review to the restaurant
+        .then(restaurant => {
+            // push the review into the restaurant's review array and return the saved restaurant
+            restaurant.reviews.push(review)
 
-    // on the front end, I HAVE to send a review as the top level key
-    Review.create(req.body.review)
-    .then(review => {
-        res.status(201).json({ review: review })
-    })
-    .catch(next)
-    // ^^^ shorthand for:
-        //^ .catch(error => next(error))
-})
-
-// index that shows only the user's reviews
-router.get('/mine', (req, res, next) => {
-    // destructure user info from req.session
-    // const { username, userId, loggedIn } = req.session
-	Review.find({ owner: userId })
-		// .then(reviews => {
-		// 	res.render('reviews/index', { reviews, username, loggedIn })
-		// })
-		.then(reviews => {
-            res.status(200).json({ reviews: reviews })
+            return restaurant.save()
         })
-		.catch(next)
+        .then(restaurant => res.status(201).json({ restaurant: restaurant }))
+        // pass to the next thing
+        .catch(next)
 })
 
-// UPDATE
-// PATCH /reviews/5a7db6c74d55bc51bdf39793
-router.patch('/reviews/:id', requireToken, removeBlanks, (req, res, next) => {
-	// if the client attempts to change the `owner` property by including a new
-	// owner, prevent that by deleting that key/value pair
-	delete req.body.review.owner
+// UPDATE a review
+// PATCH -> /reviews/<restaurant_id>/<review_id>
+router.patch('/reviews/:restaurantId/:reviewId', requireToken, removeBlanks, (req, res, next) => {
+    const { restaurantId, reviewId } = req.params
 
-	Review.findById(req.params.id)
-		.then(handle404)
-		.then((review) => {
-			// pass the `req` object and the Mongoose record to `requireOwnership`
-			// it will throw an error if the current user isn't the owner
-			requireOwnership(req, review)
+    // find the restaurant
+    Restaurant.findById(restaurantId)
+        .then(handle404)
+        .then(restaurant => {
+            // get the specific review
+            const theReview = restaurant.reviews.id(reviewId)
 
-			// pass the result of Mongoose's `.update` to the next `.then`
-			return review.updateOne(req.body.review)
-		})
-		// if that succeeded, return 204 and no JSON
-		.then(() => res.sendStatus(204))
-		// if an error occurs, pass it to the handler
-		.catch(next)
+            // make sure the user owns the restaurant
+            requireOwnership(req, restaurant)
+
+            // update that review with the req body
+            theReview.set(req.body.review)
+
+            return restaurant.save()
+        })
+        .then(restaurant => res.sendStatus(204))
+        .catch(next)
 })
 
+// DESTROY a review
+// DELETE -> /reviews/<restaurant_id>/<review_id>
+router.delete('/reviews/:restaurantId/:restaurantId', requireToken, (req, res, next) => {
+    const { restaurantId, reviewId } = req.params
 
-//* DESTROY
-router.delete('/reviews/:id', requireToken, (req, res, next) => {
-	Review.findById(req.params.id)
-		.then(handle404)
-		.then((review) => {
-			// throw an error if current user doesn't own `review`
-			requireOwnership(req, review)
-			// delete the review ONLY IF the above didn't throw
-			review.deleteOne()
-		})
-		// send back 204 and no content if the deletion succeeded
-		.then(() => res.sendStatus(204))
-		// if an error occurs, pass it to the handler
-		.catch(next)
+    // find the restaurant
+    Restaurant.findById(restaurantId)
+        .then(handle404)
+        .then(restaurant => {
+            // get the specific review
+            const theReview = restaurant.reviews.id(reviewId)
+
+            // make sure the user owns the restaurant
+            requireOwnership(req, restaurant)
+
+            // update that review with the req body
+            theReview.remove()
+
+            return restaurant.save()
+        })
+        .then(restaurant => res.sendStatus(204))
+        .catch(next)
 })
 
-
+// export router
 module.exports = router
