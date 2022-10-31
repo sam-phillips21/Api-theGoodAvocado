@@ -19,6 +19,7 @@ const requireOwnership = customErrors.requireOwnership
 // this is middleware that will remove blank fields from `req.body`, e.g.
 // { restaurant: { title: '', text: 'foo' } } -> { restaurant: { text: 'foo' } }
 const removeBlanks = require('../../lib/remove_blank_fields')
+const { populate } = require('../models/restaurant')
 // passing this as a second argument to `router.<verb>` will make it
 // so that a token MUST be passed for that route to be available
 // it will also set `req.user`
@@ -68,6 +69,22 @@ router.post('/restaurants', requireToken, (req, res, next) => {
     .catch(next)
     // ^^^ shorthand for:
         //^ .catch(error => next(error))
+})
+
+// index that shows only the user's restaurants
+router.get('/mine', (req, res, next) => {
+    // destructure user info from req.session
+    // const { username, userId, loggedIn } = req.session
+    // const { userId } = req.session
+	Restaurant.find({ owner: userId })
+    populate(owner)
+		// .then(restaurants => {
+		// 	res.render('restaurants/index', { restaurants, username, loggedIn })
+		// })
+        .then(restaurants => {
+            res.status(200).json({ restaurants: restaurants })
+        })
+		.catch(next)
 })
 
 // UPDATE
