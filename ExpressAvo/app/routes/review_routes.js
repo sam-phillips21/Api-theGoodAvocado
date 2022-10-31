@@ -68,6 +68,20 @@ router.post('/reviews', requireToken, (req, res, next) => {
         //^ .catch(error => next(error))
 })
 
+// index that shows only the user's reviews
+router.get('/mine', (req, res, next) => {
+    // destructure user info from req.session
+    // const { username, userId, loggedIn } = req.session
+	Review.find({ owner: userId })
+		// .then(reviews => {
+		// 	res.render('reviews/index', { reviews, username, loggedIn })
+		// })
+		.then(reviews => {
+            res.status(200).json({ reviews: reviews })
+        })
+		.catch(next)
+})
+
 // UPDATE
 // PATCH /reviews/5a7db6c74d55bc51bdf39793
 router.patch('/reviews/:id', requireToken, removeBlanks, (req, res, next) => {
