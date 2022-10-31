@@ -39,7 +39,7 @@ router.post('/reviews/:restaurantId', removeBlanks, (req, res, next) => {
         // add the review to the restaurant
         .then(restaurant => {
             // push the review into the restaurant's review array and return the saved restaurant
-            restaurant.reviewss.push(review)
+            restaurant.reviews.push(review)
 
             return restaurant.save()
         })
