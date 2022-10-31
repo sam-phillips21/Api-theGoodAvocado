@@ -34,7 +34,7 @@ mongoose.connect(db, {
     .then(() => {
         Restaurant.deleteMany({ owner: null })
             .then(deletedRestaurants => {
-
+                console.log('the deleted', deletedRestaurants)
 
                 Restaurant.create(startRestaurants)
                     .then(newRestaurants => {
