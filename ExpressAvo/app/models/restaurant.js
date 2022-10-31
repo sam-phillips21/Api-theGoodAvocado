@@ -12,7 +12,7 @@ const restaurantSchema = new mongoose.Schema(
 			required: true
 		},
 		telephone: {
-			type: String, 
+			type: String,
 			required: true
 		},
 		type: {
@@ -21,57 +21,46 @@ const restaurantSchema = new mongoose.Schema(
 		},
 		otherTypes: {
 			type: String,
-			required: true,
-			default: null
+			required: false,
 		},
-		isUserRestaurantOwner: { 
+		isUserRestaurantOwner: {
 			type: Boolean,
-			required: true,
 			default: false
 		},
-		delivery: { 
+		delivery: {
 			type: Boolean,
-			required: true,
 			default: false
 		},
 		reservations: {
 			type: Boolean,
-			required: true,
 			default: false
 		},
 		takeout: {
 			type: Boolean,
-			required: true,
 			default: false
 		},
 		catering: {
 			type: Boolean,
-			required: true,
 			default: false
 		},
 		acceptsCreditCard: {
 			type: Boolean,
-			required: true,
 			default: false
 		},
 		parking: {
 			type: Boolean,
-			required: true,
 			default: false
 		},
 		wifi: {
 			type: Boolean,
-			required: true,
 			default: false
 		},
 		masksRequired: {
 			type: Boolean,
-			required: true,
 			default: false
 		},
 		alchohol: {
 			type: Boolean,
-			required: true,
 			default: false
 		},
 
