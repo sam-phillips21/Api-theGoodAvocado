@@ -7,6 +7,14 @@ const restaurantSchema = new mongoose.Schema(
 			type: String,
 			required: true,
 		},
+		address: {
+			type: String,
+			required: true
+		},
+		telephone: {
+			type: String, 
+			required: true
+		},
 		type: {
 			type: String,
 			required: true,
@@ -15,14 +23,6 @@ const restaurantSchema = new mongoose.Schema(
 			type: String,
 			required: true,
 			default: null
-		},
-		address: {
-			type: String,
-			required: true
-		},
-		telephone: {
-			type: String, 
-			required: true
 		},
 		isUserRestaurantOwner: { 
 			type: Boolean,
