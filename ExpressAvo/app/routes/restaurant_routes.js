@@ -58,8 +58,17 @@ router.get('/restaurants/:id', (req, res, next) => {
 //* /restaruants
 router.post('/restaurants', requireToken, (req, res, next) => {
     req.body.restaurant.owner = req.user.id
-    req.body.delivery = req.body.delivery === 'on' ? true : false
+
     req.body.isUserRestaurantOwner = req.body.isUserRestaurantOwner === 'on' ? true : false
+    req.body.delivery = req.body.delivery === 'on' ? true : false
+    req.body.reservations = req.body.reservations === 'on' ? true : false
+    req.body.takeout = req.body.takeout === 'on' ? true : false
+    req.body.catering = req.body.catering === 'on' ? true : false
+    req.body.acceptsCreditCard = req.body.acceptsCreditCard === 'on' ? true : false
+    req.body.parking = req.body.parking === 'on' ? true : false
+    req.body.wifi = req.body.wifi === 'on' ? true : false
+    req.body.masksRequired = req.body.masksRequired === 'on' ? true : false
+    req.body.alcohol = req.body.alcohol === 'on' ? true : false
 
     // on the front end, I HAVE to send a restaurant as the top level key
     Restaurant.create(req.body.restaurant)
@@ -90,8 +99,18 @@ router.get('/mine', (req, res, next) => {
 // UPDATE
 // PATCH /restaurants/5a7db6c74d55bc51bdf39793
 router.patch('/restaurants/:id', requireToken, removeBlanks, (req, res, next) => {
-    req.body.delivery = req.body.delivery === 'on' ? true : false
+    
     req.body.isUserRestaurantOwner = req.body.isUserRestaurantOwner === 'on' ? true : false
+    req.body.delivery = req.body.delivery === 'on' ? true : false
+    req.body.reservations = req.body.reservations === 'on' ? true : false
+    req.body.takeout = req.body.takeout === 'on' ? true : false
+    req.body.catering = req.body.catering === 'on' ? true : false
+    req.body.acceptsCreditCard = req.body.acceptsCreditCard === 'on' ? true : false
+    req.body.parking = req.body.parking === 'on' ? true : false
+    req.body.wifi = req.body.wifi === 'on' ? true : false
+    req.body.masksRequired = req.body.masksRequired === 'on' ? true : false
+    req.body.alcohol = req.body.alcohol === 'on' ? true : false
+    
 	// if the client attempts to change the `owner` property by including a new
 	// owner, prevent that by deleting that key/value pair
 	delete req.body.restaurant.owner
