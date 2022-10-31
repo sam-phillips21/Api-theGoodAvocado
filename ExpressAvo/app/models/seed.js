@@ -13,7 +13,7 @@ const startRestaurants = [
     {name: 'Sweetgreen' , type: 'American', address:'659 Boylston St, Boston, MA 02116' , telephone: '617-936-3464', delivery: false, isUserRestaurantOwner: false},
     {name: 'Cafe Bonjour' , type: 'American', address: '55 Temple Pl, Boston, MA 02111-1300' , telephone: '617-779-0062', delivery: false, isUserRestaurantOwner: false},
     {name: 'Boston Sail Loft Restaurant' , type: 'American' , address:'80 Atlantic Ave, Boston, MA 02110-3614' , telephone: '617-227-7280' , delivery: false , isUserRestaurantOwner: false},
-    {name: 'Olio e Più', type: 'Italian,' , address: '3 Greenwich Ave, New York City, NY 10014', telephone: '212-243-6546', delivery: true, isUserRestaurantOwner: false},
+    {name: 'Olio e Più', type: 'Italian' , address: '3 Greenwich Ave, New York City, NY 10014', telephone: '212-243-6546', delivery: true, isUserRestaurantOwner: false},
     {name: 'The Consulate', type: 'French', address: '519 Columbus Ave, New York City, NY 10024-3402', telephone: '646-781-9288', delivery: true, isUserRestaurantOwner: false},
     {name: 'Boucherie Union Square', type: 'French' , address: '225 Park Avenue South, New York City, NY 10003-1604', telephone: '212-353-0200', delivery: true , isUserRestaurantOwner: false},
     {name: 'Em Vietnamese Bistro', type: 'Seafood', address: '57 Front St, Brooklyn, NY 11201-1237', telephone: '718-875-7888', delivery: true, isUserRestaurantOwner: false},
