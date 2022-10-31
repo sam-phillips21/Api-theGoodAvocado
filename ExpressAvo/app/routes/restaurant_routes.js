@@ -49,7 +49,7 @@ router.get('/restaurants/:id', (req, res, next) => {
         .populate('owner')
         .then(handle404)
         .then(restaurant => {
-            res.status(200).json({ restaurant: restaurant})
+            res.status(200).json({ restaurant: restaurant })
         })
         .catch(next)
 })
