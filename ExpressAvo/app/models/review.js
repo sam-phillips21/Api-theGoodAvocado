@@ -11,6 +11,10 @@ const reviewSchema = new mongoose.Schema({
         required: true,
         enum: [0, 1, 2, 3, 4, 5]
     },
+    owner: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    },
 }, {
     timestamps: true,
     toObject: { virtuals: true },
