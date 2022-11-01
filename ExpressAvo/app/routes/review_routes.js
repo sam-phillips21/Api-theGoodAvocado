@@ -122,7 +122,7 @@ router.delete('/reviews/:restaurantId/:reviewId', requireToken, (req, res, next)
             const theReview = restaurant.reviews.id(reviewId)
 
             // make sure the user owns the restaurant
-            // requireOwnership(req, restaurant)
+            requireOwnership(req, restaurant)
 
             // update that review with the req body
             theReview.remove()
