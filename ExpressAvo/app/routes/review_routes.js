@@ -3,7 +3,7 @@ const passport = require('passport')
 
 // pull in Mongoose model for restaurants
 const Restaurant = require('../models/restaurant')
-const Review = require('../models/review')
+// const Review = require('../models/review')
 const User = require('../models/user')
 
 const customErrors = require('../../lib/custom_errors')
@@ -17,17 +17,57 @@ const router = express.Router()
 
 //* INDEX
 //* /reviews
-router.get('/reviews', requireToken, removeBlanks, (req, res, next) => {
-	const review = req.body.review
-	const userId = req.params.userId
-    User.find()
-        .populate('owner')
-        // .then(reviews => {
-        //     return reviews.map(review => review)
-        // })
-        .then(reviews => {
-            res.status(200).json({ reviews: reviews })
+// router.get('/reviews', requireToken, removeBlanks, (req, res, next) => {
+// 	const review = req.body.review
+// 	const userId = req.params.userId
+// 	let user = req.params.userId
+//     User.findById(req.user.id)
+//         .populate('owner')
+//         .then(users => {
+//             return users.map(user => user)
+//         })
+//         .then(user => {
+//             res.status(200).json({ users: user })
+//         })
+//         .catch(next)
+// })
+
+// index that shows only the user's desserts
+// router.get('/reviews', (req, res, next) => {
+
+//     Review.find()
+//         .populate('owner')
+//         .then(reviews => {
+//             return reviews.map(review => review)
+//         })
+//         .then(reviews => {
+//             res.status(200).json({ reviews: reviews })
+//         })
+//         .catch(next)
+// })
+
+// UPDATE a review
+// PATCH -> /reviews/<restaurant_id>/<review_id>
+router.patch('/reviews/:restaurantId/:reviewId', requireToken, removeBlanks, (req, res, next) => {
+    const { restaurantId, reviewId } = req.params
+	console.log('i made it here', restaurantId, reviewId)
+    // find the restaurant
+    Restaurant.findById(restaurantId)
+        .then(handle404)
+        .then(restaurant => {
+            // get the specific review
+            // const theReview = restaurant.reviews.id(reviewId)
+			const index = restaurant.reviews.map(review => review.id).indexOf(reviewId)
+			const theReview = restaurant.reviews[index]
+            // make sure the user owns the restaurant
+            // requireOwnership(req, restaurant)
+
+            // update that review with the req body
+            theReview.set(req.body.review)
+			console.log('this is the req.body', req.body.review)
+            return restaurant.save()
         })
+        .then(restaurant => res.sendStatus(204))
         .catch(next)
 })
 
@@ -67,33 +107,11 @@ router.post('/reviews/:restaurantId', removeBlanks, (req, res, next) => {
         .catch(next)
 })
 
-// UPDATE a review
-// PATCH -> /reviews/<restaurant_id>/<review_id>
-router.patch('/reviews/:restaurantId/:reviewId', requireToken, removeBlanks, (req, res, next) => {
-    const { restaurantId, reviewId } = req.params
 
-    // find the restaurant
-    Restaurant.findById(restaurantId)
-        .then(handle404)
-        .then(restaurant => {
-            // get the specific review
-            const theReview = restaurant.reviews.id(reviewId)
-
-            // make sure the user owns the restaurant
-            requireOwnership(req, restaurant)
-
-            // update that review with the req body
-            theReview.set(req.body.review)
-
-            return restaurant.save()
-        })
-        .then(restaurant => res.sendStatus(204))
-        .catch(next)
-})
 
 // DESTROY a review
 // DELETE -> /reviews/<restaurant_id>/<review_id>
-router.delete('/reviews/:restaurantId/:restaurantId', requireToken, (req, res, next) => {
+router.delete('/reviews/:restaurantId/:reviewId', requireToken, (req, res, next) => {
     const { restaurantId, reviewId } = req.params
 
     // find the restaurant
