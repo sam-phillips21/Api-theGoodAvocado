@@ -59,7 +59,7 @@ const restaurantSchema = new mongoose.Schema(
 			type: Boolean,
 			default: false
 		},
-		alchohol: {
+		alcohol: {
 			type: Boolean,
 			default: false
 		},
