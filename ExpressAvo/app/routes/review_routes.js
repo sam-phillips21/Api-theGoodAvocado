@@ -78,9 +78,8 @@ router.patch('/reviews/:restaurantId/:reviewId', requireToken, removeBlanks, (re
         .then(restaurant => {
             // get the specific review
             const theReview = restaurant.reviews.id(reviewId)
-
             // make sure the user owns the restaurant
-            requireOwnership(req, restaurant)
+            // requireOwnership(req, restaurant)
 
             // update that review with the req body
             theReview.set(req.body.review)
@@ -93,7 +92,7 @@ router.patch('/reviews/:restaurantId/:reviewId', requireToken, removeBlanks, (re
 
 // DESTROY a review
 // DELETE -> /reviews/<restaurant_id>/<review_id>
-router.delete('/reviews/:restaurantId/:restaurantId', requireToken, (req, res, next) => {
+router.delete('/reviews/:restaurantId/:reviewId', requireToken, (req, res, next) => {
     const { restaurantId, reviewId } = req.params
 
     // find the restaurant
