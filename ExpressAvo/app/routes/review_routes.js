@@ -3,14 +3,33 @@ const passport = require('passport')
 
 // pull in Mongoose model for restaurants
 const Restaurant = require('../models/restaurant')
+const Review = require('../models/review')
+const User = require('../models/user')
 
 const customErrors = require('../../lib/custom_errors')
 const handle404 = customErrors.handle404
 const requireOwnership = customErrors.requireOwnership
 const removeBlanks = require('../../lib/remove_blank_fields')
-const restaurant = require('../models/restaurant')
+// const restaurant = require('../models/restaurant')
 const requireToken = passport.authenticate('bearer', { session: false })
 const router = express.Router()
+
+
+//* INDEX
+//* /reviews
+router.get('/reviews', requireToken, removeBlanks, (req, res, next) => {
+	const review = req.body.review
+	const userId = req.params.userId
+    User.find()
+        .populate('owner')
+        // .then(reviews => {
+        //     return reviews.map(review => review)
+        // })
+        .then(reviews => {
+            res.status(200).json({ reviews: reviews })
+        })
+        .catch(next)
+})
 
 
 // GET -> a restaurants review 
@@ -85,7 +104,7 @@ router.delete('/reviews/:restaurantId/:restaurantId', requireToken, (req, res, n
             const theReview = restaurant.reviews.id(reviewId)
 
             // make sure the user owns the restaurant
-            requireOwnership(req, restaurant)
+            // requireOwnership(req, restaurant)
 
             // update that review with the req body
             theReview.remove()
