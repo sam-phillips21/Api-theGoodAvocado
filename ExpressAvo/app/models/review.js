@@ -16,6 +16,10 @@ const reviewSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true
+    },
+    authorEmail: {
+        type: String,
+        required: false
     }
 
 }, {
