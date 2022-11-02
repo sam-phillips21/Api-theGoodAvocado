@@ -11,7 +11,7 @@ const reviewSchema = new mongoose.Schema({
         required: true,
         enum: [0, 1, 2, 3, 4, 5]
     },
-    author: {
+    owner: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true

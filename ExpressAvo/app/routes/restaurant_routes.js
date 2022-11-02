@@ -47,6 +47,7 @@ router.get('/restaurants', (req, res, next) => {
 router.get('/restaurants/:id', (req, res, next) => {
     Restaurant.findById(req.params.id)
         .populate('owner')
+        
         .then(handle404)
         .then(restaurant => {
             res.status(200).json({ restaurant: restaurant })
