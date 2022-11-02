@@ -1,5 +1,9 @@
+//////////////////////////////////////////////
+// Import Dependencies
+//////////////////////////////////////////////
 const mongoose = require('mongoose')
 
+// create the schema
 const userSchema = new mongoose.Schema(
 	{
 		email: {
@@ -32,4 +36,7 @@ const userSchema = new mongoose.Schema(
 	}
 )
 
+//////////////////////////////////////////////
+// Create and Export Model
+//////////////////////////////////////////////
 module.exports = mongoose.model('User', userSchema)

@@ -1,6 +1,10 @@
+/////////////////////////////////////////////
+// Import Dependencies
+/////////////////////////////////////////////
 const mongoose = require('mongoose')
 const reviewSchema = require('./review')
 
+// create the schema
 const restaurantSchema = new mongoose.Schema(
 	{
 		name: {
@@ -79,4 +83,7 @@ const restaurantSchema = new mongoose.Schema(
 	}
 )
 
+//////////////////////////////////////////////
+// Create and Export Model
+//////////////////////////////////////////////
 module.exports = mongoose.model('Restaurant', restaurantSchema)
