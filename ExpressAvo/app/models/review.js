@@ -16,7 +16,7 @@ const reviewSchema = new mongoose.Schema({
         ref: 'User',
         required: true
     },
-    authorEmail: {
+    ownerEmail: {
         type: String,
         required: false
     }
