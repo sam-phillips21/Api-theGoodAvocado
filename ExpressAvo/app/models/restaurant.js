@@ -63,6 +63,10 @@ const restaurantSchema = new mongoose.Schema(
 			type: Boolean,
 			default: false
 		},
+		veganOptions: {
+			type: Boolean,
+			default: false
+		},
 
 		reviews: [reviewSchema],
 		owner: {
