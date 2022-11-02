@@ -8,7 +8,7 @@ const User = require('../models/user')
 
 const customErrors = require('../../lib/custom_errors')
 const handle404 = customErrors.handle404
-const requireOwnership = customErrors.requireOwnership
+// const requireOwnership = customErrors.requireOwnership <-- not used anymore
 const removeBlanks = require('../../lib/remove_blank_fields')
 // const restaurant = require('../models/restaurant')
 const requireToken = passport.authenticate('bearer', { session: false })
@@ -17,19 +17,33 @@ const router = express.Router()
 
 //* INDEX
 //* /reviews
-router.get('/reviews', requireToken, removeBlanks, (req, res, next) => {
-	const review = req.body.review
-	const userId = req.params.userId
-    User.find()
-        .populate('owner')
-        // .then(reviews => {
-        //     return reviews.map(review => review)
-        // })
+router.get('/reviews', removeBlanks, (req, res, next) => {
+    // console.log('this is being hit', res, next, req)
+	// const review = req.body.review
+	// const userId = req.params.userId
+    // expression; greater than expected
+    Restaurant.find()
+        // .populate('author')
+        .then(restaurants => {
+          let reviews = [];
+
+          restaurants.forEach((restaurant) => {
+            
+            if(restaurant.reviews.length > 0) {
+              restaurant.reviews.forEach((review) => {
+                let newReview = {'restaurant': restaurant, 'review': review}
+                reviews.push(newReview)
+              })
+            }
+          })
+            console.log('reviews are', reviews)
+            return reviews
+        })
         .then(reviews => {
             res.status(200).json({ reviews: reviews })
         })
         .catch(next)
-})
+    })
 
 
 // GET -> a restaurants review 
