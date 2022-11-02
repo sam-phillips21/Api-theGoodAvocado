@@ -63,7 +63,7 @@ const restaurantSchema = new mongoose.Schema(
 			type: Boolean,
 			default: false
 		},
-		veganOptions: {
+		vegan: {
 			type: Boolean,
 			default: false
 		},
