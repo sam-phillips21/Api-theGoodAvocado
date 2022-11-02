@@ -1,3 +1,7 @@
+////////////////////
+//  Dependencies  //
+////////////////////
+
 // require necessary NPM packages
 const express = require('express')
 const mongoose = require('mongoose')
@@ -43,9 +47,18 @@ app.use(
 	})
 )
 
+
+//////////////////////////////
+//      App Listener        //
+//////////////////////////////
+
 // define port for API to run on
 // adding PORT= to your env file will be necessary for deployment
 const port = process.env.PORT || serverDevPort
+
+////////////////////
+//    Routes      //
+////////////////////
 
 // this middleware makes it so the client can use the Rails convention
 // of `Authorization: Token token=<token>` OR the Express convention of
@@ -80,5 +93,8 @@ app.listen(port, () => {
 	console.log('listening on port ' + port)
 })
 
+///////////////////////
+//      Export       //
+///////////////////////
 // needed for testing
 module.exports = app

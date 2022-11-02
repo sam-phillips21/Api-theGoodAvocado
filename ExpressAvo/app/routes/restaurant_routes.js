@@ -1,3 +1,7 @@
+/////////////////////////////////////////////
+// Import Dependencies
+/////////////////////////////////////////////
+
 // Express docs: http://expressjs.com/en/api.html
 const express = require('express')
 // Passport docs: http://www.passportjs.org/docs/
@@ -25,11 +29,19 @@ const { populate } = require('../models/restaurant')
 // it will also set `req.user`
 const requireToken = passport.authenticate('bearer', { session: false })
 
+/////////////////////////////////////////
+// Create Router
+/////////////////////////////////////////
+
 // instantiate a router (mini app that only handles routes)
 const router = express.Router()
 
-//* INDEX
-//* /restaurants
+/////////////////////////////////////////////
+// Routes
+/////////////////////////////////////////////
+
+//* Index all
+//* GET
 router.get('/restaurants', (req, res, next) => {
     Restaurant.find()
         .populate('owner')
@@ -42,8 +54,8 @@ router.get('/restaurants', (req, res, next) => {
         .catch(next)
 })
 
-//* SHOW
-//* /restaurants/:id
+//* Show
+//* GET
 router.get('/restaurants/:id', (req, res, next) => {
     Restaurant.findById(req.params.id)
         .populate('owner')
@@ -55,8 +67,8 @@ router.get('/restaurants/:id', (req, res, next) => {
         .catch(next)
 })
 
-//* CREATE
-//* /restaruants
+//* Create
+//* POST
 router.post('/restaurants', requireToken, (req, res, next) => {
     req.body.restaurant.owner = req.user.id
 
@@ -82,24 +94,20 @@ router.post('/restaurants', requireToken, (req, res, next) => {
         //^ .catch(error => next(error))
 })
 
-// index that shows only the user's restaurants
+// Index - shows only the user's restaurants
+// GET
 router.get('/mine', (req, res, next) => {
     // destructure user info from req.session
-    // const { username, userId, loggedIn } = req.session
-    // const { userId } = req.session
 	Restaurant.find({ owner: userId })
     populate(owner)
-		// .then(restaurants => {
-		// 	res.render('restaurants/index', { restaurants, username, loggedIn })
-		// })
         .then(restaurants => {
             res.status(200).json({ restaurants: restaurants })
         })
 		.catch(next)
 })
 
-// UPDATE
-// PATCH /restaurants/5a7db6c74d55bc51bdf39793
+// Update
+// PATCH 
 router.patch('/restaurants/:id', requireToken, removeBlanks, (req, res, next) => {
     
     req.body.isUserRestaurantOwner = req.body.isUserRestaurantOwner === 'on' ? true : false
@@ -114,8 +122,7 @@ router.patch('/restaurants/:id', requireToken, removeBlanks, (req, res, next) =>
     req.body.alcohol = req.body.alcohol === 'on' ? true : false
     req.body.vegan = req.body.vegan === 'on' ? true : false
     
-	// if the client attempts to change the `owner` property by including a new
-	// owner, prevent that by deleting that key/value pair
+	// if the client attempts to change the `owner` property by including a new owner, prevent that by deleting that key/value pair
 	delete req.body.restaurant.owner
 
 	Restaurant.findById(req.params.id)
@@ -134,7 +141,7 @@ router.patch('/restaurants/:id', requireToken, removeBlanks, (req, res, next) =>
 		.catch(next)
 })
 
-
+// Delete
 //* DESTROY
 router.delete('/restaurants/:id', requireToken, (req, res, next) => {
 	Restaurant.findById(req.params.id)
@@ -151,5 +158,7 @@ router.delete('/restaurants/:id', requireToken, (req, res, next) => {
 		.catch(next)
 })
 
-
+//////////////////////////////////////////
+// Export the Router
+//////////////////////////////////////////
 module.exports = router

@@ -1,53 +1,55 @@
+/////////////////////////////////////////////
+// Import Dependencies
+/////////////////////////////////////////////
 const express = require('express')
 const passport = require('passport')
 
-// pull in Mongoose model for restaurants
+/////////////////////////////////////////////
+// Import Models
+/////////////////////////////////////////////
 const Restaurant = require('../models/restaurant')
-
-const User = require('../models/user')
-
 const customErrors = require('../../lib/custom_errors')
 const handle404 = customErrors.handle404
 const requireOwnership = customErrors.requireOwnership 
 const removeBlanks = require('../../lib/remove_blank_fields')
-// const restaurant = require('../models/restaurant')
 const requireToken = passport.authenticate('bearer', { session: false })
+
+/////////////////////////////////////////
+// Create Router
+/////////////////////////////////////////
 const router = express.Router()
 
+/////////////////////////////////////////////
+// Routes
+/////////////////////////////////////////////
 
-//* INDEX
-//* /reviews
+//* Index- user reviews
+// GET
 router.get('/reviews', removeBlanks, (req, res, next) => {
-    // console.log('this is being hit', res, next, req)
-	// const review = req.body.review
-	// const userId = req.params.userId
-    // expression; greater than expected
     Restaurant.find()
-        // .populate('author')
         .then(restaurants => {
-          let reviews = [];
-
-          restaurants.forEach((restaurant) => {
-            
-            if(restaurant.reviews.length > 0) {
-              restaurant.reviews.forEach((review) => {
-                let newReview = {'restaurant': restaurant, 'review': review}
-                reviews.push(newReview)
-              })
-            }
-          })
+            let reviews = [];
+            restaurants.forEach((restaurant) => {            
+                if(restaurant.reviews.length > 0) {
+                    restaurant.reviews.forEach((review) => {
+                        let newReview = {'restaurant': restaurant, 'review': review}
+                        reviews.push(newReview)
+                    })
+                }
+            })
             console.log('reviews are', reviews)
             return reviews
         })
         .then(reviews => {
             res.status(200).json({ reviews: reviews })
         })
+        // pass to the next thing
         .catch(next)
     })
 
 
-// GET -> a restaurants review 
-// GET /reviews/<restaurant_id>
+// Show -> a restaurants review
+// GET 
 router.get('/reviews/:restaurantId', removeBlanks, (req, res, next) => {
     // get the review from req.body
     const restaurantId = req.params.restaurantId
@@ -59,8 +61,8 @@ router.get('/reviews/:restaurantId', removeBlanks, (req, res, next) => {
         .catch(next)
 })
 
-// POST -> anybody can give a restaurant a review
-// POST /reviews/<restaurant_id>
+// Create -> anybody can give a restaurant a review
+// POST
 router.post('/reviews/:restaurantId', removeBlanks, (req, res, next) => {
     // get the review from req.body
     const review = req.body.review
@@ -82,7 +84,7 @@ router.post('/reviews/:restaurantId', removeBlanks, (req, res, next) => {
 })
 
 // UPDATE a review
-// PATCH -> /reviews/<restaurant_id>/<review_id>
+// PATCH 
 router.patch('/reviews/:restaurantId/:reviewId', requireToken, removeBlanks, (req, res, next) => {
     const { restaurantId, reviewId } = req.params
     console.log(req.body, req.user)
@@ -104,21 +106,18 @@ router.patch('/reviews/:restaurantId/:reviewId', requireToken, removeBlanks, (re
         .catch(next)
 })
 
-// DESTROY a review
-// DELETE -> /reviews/<restaurant_id>/<review_id>
+// Delete a review
+// DESTROY 
 router.delete('/reviews/:restaurantId/:reviewId', requireToken, (req, res, next) => {
     const { restaurantId, reviewId } = req.params
-
     // find the restaurant
     Restaurant.findById(restaurantId)
         .then(handle404)
         .then(restaurant => {
             // get the specific review
             const theReview = restaurant.reviews.id(reviewId)
-
             // make sure the user owns the restaurant
             requireOwnership(req, theReview)
-
             // update that review with the req body
             theReview.remove()
 
@@ -128,5 +127,7 @@ router.delete('/reviews/:restaurantId/:reviewId', requireToken, (req, res, next)
         .catch(next)
 })
 
-// export router
+//////////////////////////////////////////
+// Export the Router
+//////////////////////////////////////////
 module.exports = router

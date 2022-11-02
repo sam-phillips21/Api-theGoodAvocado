@@ -1,3 +1,6 @@
+//////////////////////////////////////////////
+// Import Dependencies
+//////////////////////////////////////////////
 const express = require('express')
 // jsonwebtoken docs: https://github.com/auth0/node-jsonwebtoken
 const crypto = require('crypto')
@@ -6,7 +9,7 @@ const passport = require('passport')
 // bcrypt docs: https://github.com/kelektiv/node.bcrypt.js
 const bcrypt = require('bcrypt')
 
-// see above for explanation of "salting", 10 rounds is recommended
+// see above for explanation of 'salting', 10 rounds is recommended
 const bcryptSaltRounds = 10
 
 // pull in error types and the logic to handle them and set status codes
@@ -22,8 +25,16 @@ const User = require('../models/user')
 // it will also set `res.user`
 const requireToken = passport.authenticate('bearer', { session: false })
 
+/////////////////////////////////////////
+// Create Router
+/////////////////////////////////////////
+
 // instantiate a router (mini app that only handles routes)
 const router = express.Router()
+
+/////////////////////////////////////////////
+// Routes
+/////////////////////////////////////////////
 
 // SIGN UP
 // POST /sign-up
@@ -143,4 +154,7 @@ router.delete('/sign-out', requireToken, (req, res, next) => {
 		.catch(next)
 })
 
+//////////////////////////////////////////
+// Export the Router
+//////////////////////////////////////////
 module.exports = router

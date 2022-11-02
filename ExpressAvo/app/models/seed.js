@@ -1,7 +1,13 @@
+///////////////////////////////////////
+// Import Dependencies
+///////////////////////////////////////
 const mongoose = require('mongoose')
 const Restaurant = require('./restaurant')
+
+///////////////////////////////////////
+// Seed Script code
+/////////////////////////////////////
 const db = require('../../config/db')
-// update seed as : name, type, address, telephone, delivery, isUserRestaurantOwner, reviews
 
 const startRestaurants = [
     { name: 'The Capital Grille', address: '1450 Larimer St, Denver, CO 80202', telephone: '303-539-2500', type: 'American', otherTypes: 'Steakhouse', delivery: false, reservations: true, takeout: false, catering: false, acceptsCreditCard: true, parking: false, wifi: true, masksRequired: false, alcohol: true, vegan: true },

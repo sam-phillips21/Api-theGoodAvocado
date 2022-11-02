@@ -1,6 +1,9 @@
+/////////////////////////////////////////////
+// Import Dependencies
+/////////////////////////////////////////////
 const mongoose = require('mongoose')
 
-// Subdoc - Review
+// Subdoc - Review schema
 const reviewSchema = new mongoose.Schema({
     comment: {
         type: String,
@@ -35,4 +38,7 @@ reviewSchema.virtual('highlyRecommend').get(function () {
     }
 })
 
+/////////////////////////////////////////////
+// Export Schema
+/////////////////////////////////////////////
 module.exports = reviewSchema
