@@ -70,6 +70,7 @@ router.post('/restaurants', requireToken, (req, res, next) => {
     req.body.wifi = req.body.wifi === 'on' ? true : false
     req.body.masksRequired = req.body.masksRequired === 'on' ? true : false
     req.body.alcohol = req.body.alcohol === 'on' ? true : false
+    req.body.vegan = req.body.vegan === 'on' ? true : false
 
     // on the front end, I HAVE to send a restaurant as the top level key
     Restaurant.create(req.body.restaurant)
@@ -111,6 +112,7 @@ router.patch('/restaurants/:id', requireToken, removeBlanks, (req, res, next) =>
     req.body.wifi = req.body.wifi === 'on' ? true : false
     req.body.masksRequired = req.body.masksRequired === 'on' ? true : false
     req.body.alcohol = req.body.alcohol === 'on' ? true : false
+    req.body.vegan = req.body.vegan === 'on' ? true : false
     
 	// if the client attempts to change the `owner` property by including a new
 	// owner, prevent that by deleting that key/value pair
