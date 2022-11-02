@@ -3,12 +3,12 @@ const passport = require('passport')
 
 // pull in Mongoose model for restaurants
 const Restaurant = require('../models/restaurant')
-const Review = require('../models/review')
+
 const User = require('../models/user')
 
 const customErrors = require('../../lib/custom_errors')
 const handle404 = customErrors.handle404
-// const requireOwnership = customErrors.requireOwnership <-- not used anymore
+const requireOwnership = customErrors.requireOwnership 
 const removeBlanks = require('../../lib/remove_blank_fields')
 // const restaurant = require('../models/restaurant')
 const requireToken = passport.authenticate('bearer', { session: false })
@@ -50,7 +50,6 @@ router.get('/reviews', removeBlanks, (req, res, next) => {
 // GET /reviews/<restaurant_id>
 router.get('/reviews/:restaurantId', removeBlanks, (req, res, next) => {
     // get the review from req.body
-    const review = req.body.review
     const restaurantId = req.params.restaurantId
     // find the restaurant by its id
     Restaurant.findById(restaurantId)
@@ -65,6 +64,7 @@ router.get('/reviews/:restaurantId', removeBlanks, (req, res, next) => {
 router.post('/reviews/:restaurantId', removeBlanks, (req, res, next) => {
     // get the review from req.body
     const review = req.body.review
+    console.log(review)
     const restaurantId = req.params.restaurantId
     // find the restaurant by its id
     Restaurant.findById(restaurantId)
@@ -85,7 +85,7 @@ router.post('/reviews/:restaurantId', removeBlanks, (req, res, next) => {
 // PATCH -> /reviews/<restaurant_id>/<review_id>
 router.patch('/reviews/:restaurantId/:reviewId', requireToken, removeBlanks, (req, res, next) => {
     const { restaurantId, reviewId } = req.params
-
+    console.log(req.body, req.user)
     // find the restaurant
     Restaurant.findById(restaurantId)
         .then(handle404)
@@ -93,7 +93,7 @@ router.patch('/reviews/:restaurantId/:reviewId', requireToken, removeBlanks, (re
             // get the specific review
             const theReview = restaurant.reviews.id(reviewId)
             // make sure the user owns the restaurant
-            // requireOwnership(req, restaurant)
+            requireOwnership(req, theReview)
 
             // update that review with the req body
             theReview.set(req.body.review)
@@ -117,7 +117,7 @@ router.delete('/reviews/:restaurantId/:reviewId', requireToken, (req, res, next)
             const theReview = restaurant.reviews.id(reviewId)
 
             // make sure the user owns the restaurant
-            // requireOwnership(req, restaurant)
+            requireOwnership(req, theReview)
 
             // update that review with the req body
             theReview.remove()
