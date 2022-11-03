@@ -38,6 +38,10 @@ reviewSchema.virtual('highlyRecommend').get(function () {
     }
 })
 
+reviewSchema.virtual('username').get(function () {
+	return this.ownerEmail.slice(0, this.ownerEmail.indexOf('@'))
+})
+
 /////////////////////////////////////////////
 // Export Schema
 /////////////////////////////////////////////
