@@ -33,7 +33,7 @@ const reviewSchema = new mongoose.Schema({
     toObject: { virtuals: true },
 	toJSON: { virtuals: true }
 })
-
+//Great use of virtuals!
 reviewSchema.virtual('highlyRecommend').get(function () {
 	if (this.rating >= 4) {
         return true
